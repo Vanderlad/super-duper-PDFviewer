@@ -1,0 +1,93 @@
+:root {
+  --page-width: 860px;
+  --page-gap: 18px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+#bgLayer {
+  position: fixed;
+  inset: 0;
+  background: #111;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.08); /* avoid blur edges */
+  z-index: 0;
+}
+
+#bgDim {
+  position: fixed;
+  inset: 0;
+  background: black;
+  opacity: 0.25;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  backdrop-filter: blur(10px);
+  background: rgba(20, 20, 20, 0.55);
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+#toolbar button {
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#toolbar input[type="range"] {
+  vertical-align: middle;
+}
+
+#toolbar .mid {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#toolbar .spacer {
+  margin-left: 10px;
+}
+
+#viewerContainer {
+  position: relative;
+  z-index: 1;
+  padding: 24px 16px 48px;
+}
+
+#pages {
+  display: grid;
+  gap: var(--page-gap);
+  justify-content: center;
+}
+
+.page {
+  width: var(--page-width);
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.page canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}

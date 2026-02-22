@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Background Viewer",
+  "version": "0.1.0",
+  "description": "Open PDFs in a custom viewer with background image + blur.",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_title": "PDF Background Viewer"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["viewer.html", "viewer.css", "viewer.js", "ui.js", "pdfjs/pdf.mjs", "pdfjs/pdf.worker.mjs"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
