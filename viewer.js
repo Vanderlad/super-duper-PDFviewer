@@ -8,8 +8,10 @@ function getPdfUrlFromQuery() {
 }
 
 async function renderPdf(url) {
+  const pagesEl = document.getElementById("pages");
+
   if (!url) {
-    document.getElementById("pages").textContent = "No PDF URL provided.";
+    pagesEl.textContent = "No PDF URL provided.";
     return;
   }
 
@@ -17,18 +19,22 @@ async function renderPdf(url) {
   const loadingTask = pdfjsLib.getDocument({ url });
   const pdf = await loadingTask.promise;
 
-  const pagesEl = document.getElementById("pages");
   pagesEl.innerHTML = "";
 
-  // Render each page
+  const targetCssWidth = 860; // matches your --page-width
+  const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap for performance
+
   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
     const page = await pdf.getPage(pageNum);
 
-    // Pick a scale that roughly matches our CSS width
-    const viewport1 = page.getViewport({ scale: 1.0 });
-    const targetWidth = 860;
-    const scale = targetWidth / viewport1.width;
-    const viewport = page.getViewport({ scale });
+    // Base viewport at scale 1 (CSS pixels)
+    const viewport1 = page.getViewport({ scale: 1 });
+
+    // Scale to fit your desired CSS width
+    const cssScale = targetCssWidth / viewport1.width;
+
+    // Render scale = CSS scale * device pixel ratio (sharper)
+    const renderViewport = page.getViewport({ scale: cssScale * dpr });
 
     const pageWrap = document.createElement("div");
     pageWrap.className = "page";
@@ -36,15 +42,20 @@ async function renderPdf(url) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d", { alpha: false });
 
-    canvas.width = Math.floor(viewport.width);
-    canvas.height = Math.floor(viewport.height);
+    // Actual pixel buffer size (device pixels)
+    canvas.width = Math.floor(renderViewport.width);
+    canvas.height = Math.floor(renderViewport.height);
+
+    // Display size (CSS pixels)
+    canvas.style.width = `${Math.floor(renderViewport.width / dpr)}px`;
+    canvas.style.height = `${Math.floor(renderViewport.height / dpr)}px`;
 
     pageWrap.appendChild(canvas);
     pagesEl.appendChild(pageWrap);
 
     await page.render({
       canvasContext: ctx,
-      viewport
+      viewport: renderViewport,
     }).promise;
   }
 }

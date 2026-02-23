@@ -101,9 +101,7 @@ html, body {
 }
 
 .page canvas {
-  width: 100%;
-  height: auto;
-  display: block;
+  image-rendering: auto;
 }
 
 /* ---------- Dropdown menu (popover) ---------- */
