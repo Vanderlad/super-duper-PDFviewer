@@ -9,14 +9,26 @@ html, body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
+/* ---------- Background layers ---------- */
 #bgLayer {
   position: fixed;
   inset: 0;
   background: #111;
   background-size: cover;
   background-position: center;
-  transform: scale(1.08); /* avoid blur edges */
+  transform: scale(1.08);
   z-index: 0;
+}
+
+#bgVideo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08);
+  z-index: 0;
+  display: none;
 }
 
 #bgDim {
@@ -24,14 +36,15 @@ html, body {
   inset: 0;
   background: black;
   opacity: 0.25;
-  z-index: 0;
   pointer-events: none;
+  z-index: 1;
 }
 
+/* ---------- Toolbar ---------- */
 #toolbar {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   gap: 12px;
   justify-content: space-between;
@@ -66,9 +79,10 @@ html, body {
   margin-left: 10px;
 }
 
+/* ---------- PDF pages ---------- */
 #viewerContainer {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   padding: 24px 16px 48px;
 }
 
@@ -91,3 +105,132 @@ html, body {
   height: auto;
   display: block;
 }
+
+/* ---------- Dropdown menu (popover) ---------- */
+.dropdown {
+  position: relative;
+}
+
+.dropdownBtn {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+.dropdownBtn::-webkit-details-marker { display: none; }
+
+.dropdown .chev {
+  display: inline-block;
+  transition: transform 150ms ease;
+}
+.dropdown[open] .chev { transform: rotate(180deg); }
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(860px, 92vw);
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(20,20,20,0.72);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  z-index: 10;
+}
+
+.dropdownMenu .row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px 0;
+}
+
+.dropdownMenu label {
+  font-size: 12px;
+  opacity: 0.9;
+  min-width: 90px;
+}
+
+/* Inputs/buttons keep dark theme */
+.dropdownMenu input,
+.dropdownMenu button {
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.07);
+  color: white;
+  padding: 8px 10px;
+}
+
+.dropdownMenu input::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+/* SELECTS: force readable dropdown items */
+.dropdownMenu select {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: white;
+  color: black;
+  padding: 8px 10px;
+}
+.dropdownMenu select option {
+  background: white;
+  color: black;
+}
+
+/* Stretch text boxes */
+.dropdownMenu input#urlInput,
+.dropdownMenu input#unsplashQuery,
+.dropdownMenu input#unsplashCollectionId,
+.dropdownMenu input#pexelsQuery,
+.dropdownMenu input#unsplashKey,
+.dropdownMenu input#pexelsKey {
+  flex: 1;
+  min-width: 260px;
+}
+
+.dropdownMenu .hint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.dropdownMenu .actions {
+  justify-content: flex-end;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+.dropdownMenu button.primary {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.dropdownMenu button.secondary {
+  background: rgba(255,255,255,0.10);
+}
+
+.creditRow {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+.credit {
+  font-size: 12px;
+  opacity: 0.85;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.credit a { color: white; }

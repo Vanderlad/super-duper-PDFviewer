@@ -1,42 +1,129 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>PDF Background Viewer</title>
-    <link rel="stylesheet" href="viewer.css" />
-  </head>
-  <body>
-    <!-- Background layer (behind everything) -->
-    <div id="bgLayer"></div>
-    <div id="bgDim"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDF Viewer</title>
+  <link rel="stylesheet" href="viewer.css" />
+</head>
+<body>
+  <!-- Background layers -->
+  <div id="bgLayer"></div>
+  <video id="bgVideo" muted autoplay loop playsinline></video>
+  <div id="bgDim"></div>
 
-    <!-- App UI -->
-    <header id="toolbar">
-      <div class="left">
-        <button id="btnPickBg">Background image</button>
-        <input id="fileBg" type="file" accept="image/*" hidden />
-      </div>
+  <header id="toolbar">
+    <div class="left">
+      <button id="btnPickBg" type="button">Background file</button>
+      <input id="fileBg" type="file" accept="image/*,video/*" hidden />
+      <button id="btnClearBg" type="button">Clear</button>
+    </div>
 
-      <div class="mid">
-        <label>Blur</label>
-        <input id="blur" type="range" min="0" max="30" value="12" />
-        <span id="blurVal">12</span>
-        <label class="spacer">Dim</label>
-        <input id="dim" type="range" min="0" max="0.8" step="0.01" value="0.25" />
-        <span id="dimVal">0.25</span>
-      </div>
+    <div class="mid">
+      <label>Blur</label>
+      <input id="blur" type="range" min="0" max="30" value="12" />
+      <span id="blurVal">12</span>
 
-      <div class="right">
-        <button id="btnClearBg">Clear</button>
-      </div>
-    </header>
+      <label class="spacer">Dim</label>
+      <input id="dim" type="range" min="0" max="0.8" step="0.01" value="0.25" />
+      <span id="dimVal">0.25</span>
+    </div>
 
-    <main id="viewerContainer">
-      <div id="pages"></div>
-    </main>
+    <div class="right">
+      <!-- Dropdown popover -->
+      <details id="bgPanel" class="dropdown">
+        <summary class="dropdownBtn">
+          Background settings <span class="chev">▾</span>
+        </summary>
 
-    <script type="module" src="viewer.js"></script>
-    <script src="ui.js"></script>
-  </body>
+        <!-- FORM enables Enter-to-Apply -->
+        <form id="bgForm" class="dropdownMenu">
+          <div class="row">
+            <label for="bgType">Type</label>
+            <select id="bgType">
+              <option value="solid">Solid Color</option>
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+            </select>
+
+            <label for="sourceKind">Source</label>
+            <select id="sourceKind">
+              <option value="local">Local file</option>
+              <option value="url">URL</option>
+              <option value="unsplash_search">Unsplash search</option>
+              <option value="unsplash_collection">Unsplash collection</option>
+              <option value="pexels_search">Pexels video search</option>
+            </select>
+
+            <label for="frequency">Frequency</label>
+            <select id="frequency">
+              <option value="locked">Locked</option>
+              <option value="every_tab">Every tab</option>
+              <option value="every_hour">Every hour</option>
+              <option value="every_day">Every day</option>
+            </select>
+          </div>
+
+          <div class="row" id="rowUrl" style="display:none;">
+            <label for="urlInput">URL</label>
+            <input id="urlInput" placeholder="https://example.com/bg.jpg or .mp4" />
+            <span class="hint">Use Type to choose image vs video</span>
+          </div>
+
+          <div class="row" id="rowColor" style="display:none;">
+            <label for="colorInput">Color</label>
+            <input id="colorInput" type="color" value="#111111" />
+            <span class="hint">Used when Type = Solid</span>
+          </div>
+
+          <div class="row" id="rowUnsplashQuery" style="display:none;">
+            <label for="unsplashQuery">Unsplash search</label>
+            <input id="unsplashQuery" placeholder="tokyo night, minimal, mountains…" />
+            <span class="hint">Random pick for now</span>
+          </div>
+
+          <div class="row" id="rowUnsplashCollection" style="display:none;">
+            <label for="unsplashCollectionId">Collection ID</label>
+            <input id="unsplashCollectionId" placeholder="123456" />
+          </div>
+
+          <div class="row" id="rowPexelsQuery" style="display:none;">
+            <label for="pexelsQuery">Video search</label>
+            <input id="pexelsQuery" placeholder="rainy city, ocean waves, cyberpunk…" />
+            <span class="hint">Random pick for now</span>
+          </div>
+
+          <!-- Keys: shown only when needed -->
+          <div class="row" id="rowUnsplashKey" style="display:none;">
+            <label for="unsplashKey">Unsplash key</label>
+            <input id="unsplashKey" placeholder="Paste your Unsplash Access Key" />
+            <button type="button" id="btnSaveUnsplashKey" class="secondary">Save</button>
+          </div>
+
+          <div class="row" id="rowPexelsKey" style="display:none;">
+            <label for="pexelsKey">Pexels key</label>
+            <input id="pexelsKey" placeholder="Paste your Pexels API Key" />
+            <button type="button" id="btnSavePexelsKey" class="secondary">Save</button>
+          </div>
+
+          <div class="row actions">
+            <button id="btnApplyProvider" class="primary" type="submit">Apply</button>
+          </div>
+
+          <div class="row creditRow">
+            <div id="credit" class="credit"></div>
+          </div>
+        </form>
+      </details>
+    </div>
+  </header>
+
+  <main id="viewerContainer">
+    <div id="pages"></div>
+  </main>
+
+  <!-- IMPORTANT: module -->
+  <script type="module" src="ui.js"></script>
+  <script type="module" src="viewer.js"></script>
+</body>
 </html>
