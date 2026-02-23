@@ -10,6 +10,18 @@ My brain needs color haha.
 
 ---
 
+## 🚀 Installation (Developer Mode)
+
+1. Clone this repository  
+2. Open Chrome  
+3. Navigate to: chrome://extensions
+4. Enable Developer Mode  
+5. Click Load unpacked  
+6. Select the project folder  
+
+Now any PDF URL ending in `.pdf` will open in this custom viewer.
+
+---
 ## Supports
 
 - Solid color backgrounds  
@@ -87,18 +99,6 @@ Never committed or synced.
 
 ---
 
-## 🚀 Installation (Developer Mode)
-
-1. Clone this repository  
-2. Open Chrome  
-3. Navigate to: chrome://extensions
-4. Enable Developer Mode  
-5. Click Load unpacked  
-6. Select the project folder  
-
-Now any PDF URL ending in `.pdf` will open in this custom viewer.
-
----
 
 ## 🛠 Future Improvements
 
