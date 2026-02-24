@@ -11,6 +11,7 @@ let settings;
 // Toolbar controls
 const btnPickBg = document.getElementById("btnPickBg");
 const btnClearBg = document.getElementById("btnClearBg");
+const btnDownloadPdf = document.getElementById("btnDownloadPdf");
 const fileBg = document.getElementById("fileBg");
 
 const blur = document.getElementById("blur");
@@ -247,3 +248,20 @@ chrome.runtime.onMessage.addListener((msg) => {
   await syncKeyFields();
   await refreshBackground("tab_open");
 })();
+
+// Download PDF File
+btnDownloadPdf?.addEventListener("click", () => {
+  const params = new URLSearchParams(location.search);
+  const src = params.get("src");
+  if (!src) return;
+
+  // Temporary <a> to trigger browser download
+  const a = document.createElement("a");
+  a.href = src;
+  a.download = ""; // lets browser decide filename
+  a.rel = "noopener";
+  a.target = "_blank"; // helps for some cross-origin cases
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
